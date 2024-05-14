@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/davidrozoosorio/ros2_ws_2401/install/ros2_control_demo_example_11/include/**",
+        "/home/davidrozoosorio/ros2_ws_2401/install/nav2_line_following_controller/include/**",
+        "/home/davidrozoosorio/ros2_ws_2401/install/f112th_sim_2401_delta/include/**",
+        "/home/davidrozoosorio/ros2_ws_ctrl/install/ms2r_ros2_control/include/**",
+        "/home/davidrozoosorio/ros2_ws_ctrl/install/diffdrive_ex1/include/**",
+        "/home/davidrozoosorio/ros2_ws_ctrl/install/carlikebot/include/**",
+        "/home/davidrozoosorio/ros2_ws_soft/install/interfaces/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/davidrozoosorio/ros2_ws_2401/src/nav2_line_following_controller/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
