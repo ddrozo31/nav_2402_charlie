@@ -1,0 +1,20 @@
+        len_goal_x = len(self.goal_x)
+        for i in range(len_goal_x):
+            self.goal = (self.goal_x[i],self.goal_y[i])
+            
+            columnH = int((self.goal[0]- self.originX)/self.resolution)
+            rowH = int((self.goal[1]- self.originY)/self.resolution)
+
+            plt.plot(columnH,rowH,'x') # only one set, default # of points
+            path = astar(data,(row,column),(rowH,columnH)) 
+           
+            path = [(p[1]*self.resolution+self.originX,p[0]*self.resolution+self.originY) for p in path] #x,y 
+            
+            print(path)
+            path_points = np.array(path)
+            
+            plt.plot(path_points,'o') # only one set, default # of points
+            plt.show()
+
+            row = rowH
+            column = columnH

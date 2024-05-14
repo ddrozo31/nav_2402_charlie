@@ -103,6 +103,28 @@ def astar(array, start, goal):
             return data
     return False
 
+def plot(matrix):
+        # Define the size of the matrix
+    rows = matrix.shape[0]
+    cols = matrix.shape[1]
+    print(rows,cols)
+
+    # Create a plot
+    fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
+
+    # Plot obstacles and blank spaces
+    for i in range(0,rows,5):
+        for j in range(0,cols,5):
+            if matrix[i][j] == 1:
+                ax.plot(j, i, 's', color='black', markersize=1)  # Mark obstacles with black squares
+            else:
+                ax.plot(j, i, 's', color='white', markersize=1)  # Mark blank spaces with white squares and black border
+
+    ax.grid(True)
+    ax.set_aspect('equal')
+
+    plt.show()
+
 class Nav2401HNode(Node):
     def __init__(self):
         super().__init__('nav_2401_hotel_node')
@@ -141,52 +163,76 @@ class Nav2401HNode(Node):
         self.goal_x.append(msg.pose.position.x)
         self.goal_y.append(msg.pose.position.y)
         print(self.goal_x, self.goal_y)
-                
-        #self.follow_path()
-        self.get_map()
+
+        wp_ans = input("more way points (y/n)")
+        if wp_ans == 'n': 
+            #self.follow_path()
+            self.get_map()
+        else:
+            pass
 
     def get_map(self):
         data = costmap(self.map_data,self.width,self.height,self.resolution) 
         #print(data)
-
         column = int((self.x- self.originX)/self.resolution) #x,y 
         row = int((self.y- self.originY)/self.resolution) #x,y 
-        
+
         data[row][column] = 0 #
         data[data < 0] = 1 
         data[data > 5] = 1 
 
-        c_map = cm.get_cmap('rainbow')
-        c_map.set_bad('k')
-        b = data.copy()
-        b[b==0] = np.nan
-        fig = plt.imshow(b, interpolation='none', cmap=c_map,origin='lower')
-        plt.colorbar(fig)
-        plt.show(block=False)
+                # Define the size of the matrix
+        rows = data.shape[0]
+        cols = data.shape[1]
+        print(rows,cols)
+
+        # Create a plot
+        fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
+        ax.grid(True)
+
+        plt.ion() # set interactive mode on 
+        plt.show()
+
+        # Plot obstacles and blank spaces
+        for i in range(0,rows,5):
+            for j in range(0,cols,5):
+                if data[i][j] == 1:
+                    ax.plot(j, i, 's', color='black', markersize=1)  # Mark obstacles with black squares
+                else:
+                    ax.plot(j, i, 's', color='white', markersize=1)  # Mark blank spaces with white squares and black border
+
         plt.plot(column,row,'o') # only one set, default # of points
 
+        print(len(self.goal_x))
+        for i in range(len(self.goal_x)):
 
-
-        len_goal_x = len(self.goal_x)
-        for i in range(len_goal_x):
             self.goal = (self.goal_x[i],self.goal_y[i])
             
             columnH = int((self.goal[0]- self.originX)/self.resolution)
             rowH = int((self.goal[1]- self.originY)/self.resolution)
 
-            plt.plot(columnH,rowH,'x') # only one set, default # of points
+            ax.plot(columnH,rowH,'x') # only one set, default # of points
+            
             path = astar(data,(row,column),(rowH,columnH)) 
-           
+            
+            print(path)
+            y,x  = zip(*path)
+            ax.plot(x,y,'.',markersize=1)
+            
+
             path = [(p[1]*self.resolution+self.originX,p[0]*self.resolution+self.originY) for p in path] #x,y 
             
             print(path)
-            path_points = np.array(path)
+            #path_points = np.array(path)
             
-            plt.plot(path_points,'o') # only one set, default # of points
-            plt.show()
-
+        
+            ax.set_aspect('equal')
+            plt.gcf().canvas.draw() #update display window
+            plt.pause(1)
+            
             row = rowH
             column = columnH
+
 
 
 
