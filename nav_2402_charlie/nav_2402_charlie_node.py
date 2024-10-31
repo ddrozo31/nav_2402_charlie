@@ -127,17 +127,27 @@ def plot(matrix):
 
 class Nav2401HNode(Node):
     def __init__(self):
-        super().__init__('nav_2401_hotel_node')
-        self.get_logger().info('nav_2401_hotel_node Started')
+        super().__init__('nav_2402_charlie')
+        self.get_logger().info('nav_2402_charlie Started')
 
         self.subscription = self.create_subscription(OccupancyGrid,'/map',self.OccGrid_callback,10)
-        self.subscription = self.create_subscription(Odometry,'/diff_cont/odom',self.Odom_callback,10)
+        self.subscription = self.create_subscription(Odometry,'/odom',self.Odom_callback,10)
         self.subscription = self.create_subscription(PoseStamped,'/goal_pose',self.Goal_Pose_callback,QoSProfile(depth=10))
-        self.publisher_visual_path = self.create_publisher(Path, '/visual_path', 10)
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
         self.goal_x = []
         self.goal_y = []
+        self.path_msg = Path()
+
+        self.resolution = 0.
+        self.originX = 0.
+        self.originY = 0.
+        self.width = 0
+        self.height = 0
+        self.map_data = []
+
+        self.traj_y,self.traj_x = [],[]
+
 
     def OccGrid_callback(self,msg):
         self.get_logger().info('OccupancyGrid Callback')   
@@ -221,8 +231,9 @@ class Nav2401HNode(Node):
             
 
             path = [(p[1]*self.resolution+self.originX,p[0]*self.resolution+self.originY) for p in path] #x,y 
+            self.traj_y,self.traj_x  = zip(*path)
             
-            print(path)
+            print(self.traj_y)
             #path_points = np.array(path)
             
         
@@ -232,35 +243,6 @@ class Nav2401HNode(Node):
             
             row = rowH
             column = columnH
-
-
-
-
-       
-    def follow_path(self):
-        self.get_logger().info('follow_path Callback')
-
-        
-
-
-        a = np.zeros((2))
-        a[0]=self.originX
-        a[1]=self.originY
-        
-        b = np.zeros((2))
-        b[0]=self.goal[0]
-        b[1]=self.goal[1]
-
-        print(distance(a, b))
-
-        fig = plt.figure(figsize=(5,4), dpi=80) # figure size 5x4 inches
-        plt.plot(a[0],a[1],'o') # only one set, default # of points
-        plt.plot(b[0],b[1],'x')
-        plt.xlabel('x') # Labels
-        plt.ylabel('y')
-        # grid on
-        plt.grid()
-        plt.show() # presentar
 
 
 def main(args=None):

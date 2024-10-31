@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'nav_2401_hotel'
+package_name = 'nav_2402_charlie'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'nav_2401_hotel_node = nav_2401_hotel.nav_2401_hotel_node:main'
+            'nav_2402_charlie_node = nav_2402_charlie.nav_2402_charlie_node:main'
         ],
     },
 )
